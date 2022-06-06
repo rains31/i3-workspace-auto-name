@@ -22,7 +22,7 @@ rename_workspace() {
   newname=$([ ${#newname} -eq 0 ] && echo $num || echo $num:${newname:0:$MAX_NAME_LENGTH})
   [ "$oldname" = "$newname" ] || {
     msg='rename workspace "'$oldname'" to "'$newname'"'
-    [ $DEBUG = 'true' ] && echo $msg
+    [ $DEBUG = 'true' ] && echo "$msg"
     i3-msg "$msg" >/dev/null
   }
 }
@@ -36,7 +36,7 @@ update_workspaces() {
       rename_workspace $num "$oldname" "$wname"
     else
       # new workspace
-      [ ${#oldname} -eq 1 ] && {
+      [ ${#oldname} -lt 3 ] && {
         ws=$(i3-msg -t get_tree | jq '.nodes[].nodes[].nodes[] | select(.type=="workspace" and .num=='$num')')
         focus=$(echo $ws | jq '.focus[]' | head -n1)
         # in a new workspace with a forcus window, use the focus window name
